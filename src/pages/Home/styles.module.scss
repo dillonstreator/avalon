@@ -1,0 +1,37 @@
+.Home {
+    padding: 100px;
+    height: 100vh;
+}
+
+.shiftRight {
+    &:hover { animation: shiftRight 1s ease-out 0s; animation-fill-mode: forwards; }
+}
+@keyframes shiftRight {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.2);
+    }
+}
+
+.welcome {
+    opacity: 0;
+    text-align: center;
+    
+    &.first { animation: slideDownOpacity .5s ease-in 0s; animation-fill-mode: forwards; }
+    &.second { animation: slideDownOpacity .5s ease-in .75s; animation-fill-mode: forwards; }
+    &.third { animation: slideDownOpacity .5s ease-in 1.2s; animation-fill-mode: forwards; }
+}
+
+
+@keyframes slideDownOpacity {
+    from {
+        transform: translateY(-25px);
+        opacity: 0.0;
+    }
+    to {
+        transform: translateY(0px);
+        opacity: 1.0;
+    }
+}
