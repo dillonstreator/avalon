@@ -6,7 +6,7 @@ import {
 	Route,
 } from 'react-router-dom';
 
-import { Home, Rooms, Room } from './pages';
+import { Home, Rooms, Room, Game } from './pages';
 
 import styles from './styles.module.scss';
 
@@ -19,6 +19,7 @@ const App = () => {
 						<Route exact path="/" component={Home} />
 						<Route exact path="/rooms" component={Rooms} />
 						<Route exact path="/rooms/:roomId" component={Room} />
+						<Route exact path="/games/:gameId" component={Game} />
 					</Switch>
 				</main>
 			</Router>

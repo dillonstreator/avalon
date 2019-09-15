@@ -15,8 +15,8 @@ export default ({ history }) => {
 		setLoading(true);
 		socket.connect({ name });
 		socket.addEventListener('handshake completed', () => {
-			history.push('/rooms');
 			socket.removeEventListener('handshake completed');
+			history.push('/rooms');
 		});
 	};
 

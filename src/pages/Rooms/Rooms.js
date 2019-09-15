@@ -8,6 +8,8 @@ import _orderBy from 'lodash/orderBy';
 
 import styles from "./styles.module.scss"
 
+const MAX_POSSIBLE_USERS = 10;
+
 export default ({ history }) => {
 	if (!socket.isConnected()) {
 		alert('you must enter your username before joining or creating a room');
@@ -75,7 +77,7 @@ export default ({ history }) => {
 						<Table.Body>
 							{_orderBy(rooms, ['users'], ['desc']).map(
 								({ roomName, roomId, users }) => (
-									<Table.Row key={roomId} onClick={() => joinRoom(roomId)}>
+									<Table.Row key={roomId} onClick={() => joinRoom(roomId)} disabled={users.length >= MAX_POSSIBLE_USERS}>
 										<Table.Cell>{roomName}</Table.Cell>
 										<Table.Cell>{users.length}</Table.Cell>
 									</Table.Row>

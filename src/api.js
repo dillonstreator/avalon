@@ -13,9 +13,7 @@ const makeRequest = method => {
 
 		const name = socket.getName();
 		const clientId = socket.getClientId();
-		console.log(`name: ${name}, clientId: ${clientId}`);
 		const creds = btoa(`${name}:${clientId}`);
-        console.log(`creds: ${creds}`);
         if (opts.body) opts.body = JSON.stringify(opts.body);
 		const options = {
             ...opts,
@@ -25,7 +23,6 @@ const makeRequest = method => {
 			},
 			method,
 		};
-		console.log('fetch options: ', options);
         return fetch(url, options)
             .then(res => res.json())
             .catch(e => {
@@ -39,9 +36,3 @@ const makeRequest = method => {
 export const GET = makeRequest('GET');
 export const POST = makeRequest('POST');
 export const PUT = makeRequest('PUT');
-
-window.REQUESTABLES = {
-	GET,
-    POST,
-    PUT,
-};
