@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 
-const WS_URI = process.env.WS_URI || 'localhost:8080';
+const WS_URI = process.env['NODE_ENV'] === 'production' ? 'server:8080' : 'localhost:8080';
 
 class WS {
     constructor() {
