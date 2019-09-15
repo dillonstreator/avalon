@@ -1,6 +1,6 @@
 import socket from './socket';
 
-const BASE_URI = 'http://localhost:8080';
+const BASE_URI = process.env['NODE_ENV'] === 'production' ? 'server:8080' : 'http://localhost:8080';
 
 const makeRequest = method => {
 	/**
