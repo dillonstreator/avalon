@@ -16,8 +16,9 @@ export default ({ history }) => {
 		return <Redirect to="/" />;
 	}
 
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [rooms, setRooms] = useState([]);
+	const [roomName, setRoomName] = useState('');
 
 	useEffect(() => {
 		const updateHandler = room => {
@@ -51,15 +52,18 @@ export default ({ history }) => {
 			})
 			.catch(console.error); // TODO: what's the catch?!
 	};
-	const createRoom = ({ keyCode, target: { value: name } }) => {
+	const keyUp = ({ keyCode }) => {
 		if (keyCode !== 13) return;
 
-		POST(`/rooms`, { body: { name } })
+		createRoom();
+	};
+	const createRoom = () => {
+		POST(`/rooms`, { body: { name: roomName } })
 			.then(({ roomId }) => {
 				history.push(`/rooms/${roomId}`);
 			})
 			.catch(console.error); // TODO: what's the catch?!
-	};
+	}
 
 	return (
 		<Layout>
@@ -67,7 +71,7 @@ export default ({ history }) => {
 				<Loader />
 			) : (
 				<>
-					<Table celled selectable inverted striped>
+					<Table unstackable celled selectable inverted striped>
 						<Table.Header>
 							<Table.Row>
 								<Table.HeaderCell>Room Name</Table.HeaderCell>
@@ -88,9 +92,9 @@ export default ({ history }) => {
 					{rooms.length === 0 && <div className={styles.noRoomsMessage}>There are currently no rooms. Go ahead, create one!</div>}
 				</>
 			)}
-			<Input action placeholder="new room name..." onKeyUp={createRoom}>
+			<Input action placeholder="new room name..." onChange={({ target: { value } }) => setRoomName(value)} onKeyUp={keyUp}>
 				<input />
-				<Button type="submit">Create</Button>
+				<Button onClick={createRoom} type="submit">Create</Button>
 			</Input>
 		</Layout>
 	);

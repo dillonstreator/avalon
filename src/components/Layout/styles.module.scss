@@ -3,3 +3,9 @@
     height: 100vh;
     text-align: center;
 }
+
+@media only screen and (max-width: 768px) {
+    .Layout {
+        padding: 10px;
+    }
+}

@@ -8,10 +8,13 @@ import { Layout } from '../../components';
 
 export default ({ history }) => {
 	const [loading, setLoading] = useState(false);
+	const [name, setName] = useState('');
 
-	const selectName = ({ keyCode, target: { value: name } }) => {
+	const keyUp = ({ keyCode }) => {
 		if (keyCode !== 13) return;
-
+		submitName();
+	};
+	const submitName = () => {
 		setLoading(true);
 		socket.connect({ name });
 		socket.addEventListener('handshake completed', () => {
@@ -29,9 +32,9 @@ export default ({ history }) => {
 					<h1 className={`${styles.welcome} ${styles.first}`}>Welcome</h1>
 					<h1 className={`${styles.welcome} ${styles.second}`}>To</h1>
 					<h1 className={`${styles.welcome} ${styles.third}`}>Avalon</h1>
-					<Input action placeholder="Who are you...?" onKeyUp={selectName}>
+					<Input action value={name} placeholder="Who are you...?" onKeyUp={keyUp} onChange={({ target: { value } }) => setName(value)}>
 						<input />
-						<Button type="submit">Play</Button>
+						<Button onClick={submitName} type="submit">Play</Button>
 					</Input>
 				</>
 			)}
