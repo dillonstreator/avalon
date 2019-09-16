@@ -1,6 +1,6 @@
 import socket from './socket';
 
-const BASE_URI = process.env['BASE_URI'] || 'http://localhost:8080';
+const BASE_URI = process.env['NODE_ENV'] === 'production' ? 'http://avalon-api.honnold.me' : 'http://localhost:8080';
 
 const makeRequest = method => {
 	/**

@@ -15,7 +15,6 @@ services:
     command: nginx
     environment:
       - NODE_ENV=production
-      - BASE_URI=http://avalon-api.honnold.me
     ports:
       - 3000:80
     depends_on:
