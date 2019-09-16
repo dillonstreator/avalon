@@ -2,10 +2,10 @@ version: '3'
 
 services:
   server:
-    image: jhonnold/avalon-server:0.1.0
+    image: jhonnold/avalon-server:0.1.1
     command: npm start
     ports:
-      - 8080:8080
+      - 3001:8080
 
   avalon:
     build:
@@ -13,6 +13,8 @@ services:
       dockerfile: Dockerfile
     image: avalon
     command: nginx
+    environment:
+      - NODE_ENV=production
     ports:
       - 3000:80
     depends_on:
