@@ -4,6 +4,8 @@ services:
   server:
     image: jhonnold/avalon-server:0.1.1
     command: npm start
+    ports:
+      - 3001:8080
 
   avalon:
     build:
@@ -13,6 +15,7 @@ services:
     command: nginx
     environment:
       - NODE_ENV=production
+      - BASE_URI=http://avalon-api.honnold.me
     ports:
       - 3000:80
     depends_on:
