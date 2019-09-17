@@ -45,6 +45,8 @@ export default props => {
 		return () => {
 			socket.removeEventListener('room updated', updateHandler);
 			socket.removeEventListener('game started', gameStartHandler);
+			PUT(`/rooms/${roomId}/leave`)
+				.catch(console.error); // TODO: what's the catch...?!
 		}
 	}, [roomId, gameStartHandler]);
 
