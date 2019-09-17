@@ -6,43 +6,34 @@ import { Loader } from 'semantic-ui-react';
 
 import socket from '../../socket';
 import { GET } from '../../api';
-import { Layout } from '../../components';
+import { Layout, RoleCard } from '../../components';
+
+import styles from './styles.module.scss';
 
 export default props => {
-    if (!socket.isConnected()) {
+	if (!socket.isConnected()) {
 		alert('you must enter your username before joining or creating a room');
 		return <Redirect to="/" />;
-    }
+	}
 
-    const [loading, setLoading] = useState(true);
-    const [role, setRole] = useState({});
+	const [loading, setLoading] = useState(true);
+	const [role, setRole] = useState({});
 
-    const gameId = _get(props, 'match.params.gameId');
+	const gameId = _get(props, 'match.params.gameId');
 
-    useEffect(() => {
-        setLoading(true);
-        GET(`/games/${gameId}`)
-            .then(role => {
-                setLoading(false);
-                setRole(role);
-            })
-            .catch(console.error); // TODO: What's the catch?!
-    }, [gameId]);
+	useEffect(() => {
+	    setLoading(true);
+	    GET(`/games/${gameId}`)
+	        .then(role => {
+	            setLoading(false);
+	            setRole(role);
+	        })
+	        .catch(console.error); // TODO: What's the catch?!
+	}, [gameId]);
 
-    console.log(role);
-    
 	return (
-		<Layout>
-            {
-                loading ?
-                    <Loader active />
-                    :
-                    <div>
-                        <p>{role.team}</p>
-                        <p>{role.role}</p>
-                        <p>{role.message}</p>
-                    </div>
-            }
-        </Layout>
+		<Layout className={styles.gameContainer}>
+			{loading ? <Loader active /> : <RoleCard {...role} />}
+		</Layout>
 	);
 };

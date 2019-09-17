@@ -4,9 +4,11 @@ const BASE_URI = process.env['NODE_ENV'] === 'production' ? 'http://avalon-api.h
 
 const makeRequest = method => {
 	/**
-	 *
-	 * @param {String} endpoint the endpoint
-	 * @param {Request} opts the options to pass along with the request
+	 * Make an http request to the designated endpoint with the specified options.
+	 * 
+	 * @param {String} endpoint the endpoint/resource. The host/domain will be prepended, so you only need to enter the resouece to be accessed.
+	 * @param {Request} opts the standard request options.
+	 * @return {Promise<Response|Error>}
 	 */
 	const request = (endpoint, opts = {}) => {
 		const url = `${BASE_URI}${endpoint}`;

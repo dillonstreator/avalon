@@ -16,7 +16,7 @@ export default ({ history }) => {
 		return <Redirect to="/" />;
 	}
 
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [rooms, setRooms] = useState([]);
 	const [roomName, setRoomName] = useState('');
 
@@ -38,7 +38,6 @@ export default ({ history }) => {
 	useEffect(() => {
 		GET('/rooms')
 			.then(rooms => {
-				console.log(rooms);
 				setLoading(false);
 				setRooms(rooms);
 			})
@@ -71,7 +70,7 @@ export default ({ history }) => {
 				<Loader />
 			) : (
 				<>
-					<Table unstackable celled selectable inverted striped>
+					<Table unstackable celled selectable striped>
 						<Table.Header>
 							<Table.Row>
 								<Table.HeaderCell>Room Name</Table.HeaderCell>
