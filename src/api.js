@@ -1,4 +1,4 @@
-import socket from './socket';
+import { getToken } from './utils/auth';
 
 const BASE_URI = process.env['NODE_ENV'] === 'production' ? 'http://avalon-api.honnold.me' : 'http://localhost:8080';
 
@@ -13,23 +13,30 @@ const makeRequest = method => {
 	const request = (endpoint, opts = {}) => {
 		const url = `${BASE_URI}${endpoint}`;
 
-		const name = socket.getName();
-		const clientId = socket.getClientId();
-		const creds = btoa(`${name}:${clientId}`);
         if (opts.body) opts.body = JSON.stringify(opts.body);
 		const options = {
             ...opts,
 			headers: {
-				Authorization: `Basic ${creds}`,
+				Authorization: `Bearer ${getToken()}`,
 				'Content-Type': 'application/json',
 			},
 			method,
 		};
         return fetch(url, options)
-            .then(res => res.json())
+			.then(res => {
+				const successStatus = res.status >= 200 && res.status <= 299;
+				if (!successStatus) {
+					const error = Error(res.statusText);
+					error.response = res;
+					throw error;
+				}
+				else {
+					return res;
+				}
+			})
+			.then(res => res.json())
             .catch(e => {
-                console.error(e);
-                return e;
+                throw e;
             });
 	};
 	return request;

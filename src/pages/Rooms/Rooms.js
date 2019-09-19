@@ -6,15 +6,12 @@ import { GET, PUT, POST } from '../../api';
 import socket from '../../socket';
 import _orderBy from 'lodash/orderBy';
 
-import styles from "./styles.module.scss"
+import styles from './styles.module.scss';
 
 const MAX_POSSIBLE_USERS = 10;
 
 export default ({ history }) => {
-	if (!socket.isConnected()) {
-		alert('you must enter your username before joining or creating a room');
-		return <Redirect to="/" />;
-	}
+	if (!socket.isConnected()) return <Redirect to="/" />;
 
 	const [loading, setLoading] = useState(true);
 	const [rooms, setRooms] = useState([]);
@@ -25,11 +22,17 @@ export default ({ history }) => {
 			const newRooms = rooms.filter(r => r.roomId !== room.roomId).concat(room);
 			setRooms(newRooms);
 		};
+		const deleteHandler = ({ roomId }) => {
+			const newRooms = rooms.filter(r => r.roomId !== roomId);
+			setRooms(newRooms);
+		};
 		const createHandler = room => setRooms(rooms.concat(room));
+		socket.addEventListener('room deleted', deleteHandler);
 		socket.addEventListener('room updated', updateHandler);
 		socket.addEventListener('room created', createHandler);
 
 		return () => {
+			socket.removeEventListener('room deleted', deleteHandler);
 			socket.removeEventListener('room updated', updateHandler);
 			socket.removeEventListener('room created', createHandler);
 		};
@@ -45,7 +48,7 @@ export default ({ history }) => {
 	}, []);
 
 	const joinRoom = roomId => {
-		PUT(`/rooms/${roomId}/join`)
+		PUT(`/users/join-room`, { body: { roomId } })
 			.then(_ => {
 				history.push(`/rooms/${roomId}`);
 			})
@@ -58,11 +61,9 @@ export default ({ history }) => {
 	};
 	const createRoom = () => {
 		POST(`/rooms`, { body: { name: roomName } })
-			.then(({ roomId }) => {
-				history.push(`/rooms/${roomId}`);
-			})
+			.then(({ _id }) => joinRoom(_id))
 			.catch(console.error); // TODO: what's the catch?!
-	}
+	};
 
 	return (
 		<Layout>
@@ -79,21 +80,36 @@ export default ({ history }) => {
 						</Table.Header>
 						<Table.Body>
 							{_orderBy(rooms, ['users'], ['desc']).map(
-								({ roomName, roomId, users }) => (
-									<Table.Row key={roomId} onClick={() => joinRoom(roomId)} disabled={users.length >= MAX_POSSIBLE_USERS}>
-										<Table.Cell>{roomName}</Table.Cell>
+								({ name, _id, users }) => (
+									<Table.Row
+										key={_id}
+										onClick={() => joinRoom(_id)}
+										disabled={users.length >= MAX_POSSIBLE_USERS}
+									>
+										<Table.Cell>{name}</Table.Cell>
 										<Table.Cell>{users.length}</Table.Cell>
 									</Table.Row>
 								)
 							)}
 						</Table.Body>
 					</Table>
-					{rooms.length === 0 && <div className={styles.noRoomsMessage}>There are currently no rooms. Go ahead, create one!</div>}
+					{rooms.length === 0 && (
+						<div className={styles.noRoomsMessage}>
+							There are currently no rooms. Go ahead, create one!
+						</div>
+					)}
 				</>
 			)}
-			<Input action placeholder="new room name..." onChange={({ target: { value } }) => setRoomName(value)} onKeyUp={keyUp}>
+			<Input
+				action
+				placeholder="new room name..."
+				onChange={({ target: { value } }) => setRoomName(value)}
+				onKeyUp={keyUp}
+			>
 				<input />
-				<Button onClick={createRoom} type="submit">Create</Button>
+				<Button onClick={createRoom} type="submit">
+					Create
+				</Button>
 			</Input>
 		</Layout>
 	);

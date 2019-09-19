@@ -1,27 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { Input, Button, Loader } from 'semantic-ui-react';
-import socket from '../../socket';
+import { Button, Loader } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
 import { Layout } from '../../components';
+import { GET } from '../../api';
+import { hasRegistered, authenticated, getToken } from '../../utils/auth';
 
 export default ({ history }) => {
-	const [loading, setLoading] = useState(false);
-	const [name, setName] = useState('');
+	const [loading, setLoading] = useState(true);
 
-	const keyUp = ({ keyCode }) => {
-		if (keyCode !== 13) return;
-		submitName();
-	};
-	const submitName = () => {
-		setLoading(true);
-		socket.connect({ name });
-		socket.addEventListener('handshake completed', () => {
-			socket.removeEventListener('handshake completed');
-			history.push('/rooms');
-		});
-	};
+	useEffect(() => {
+		if (!hasRegistered()) {
+			setLoading(false);
+		}
+		else {
+			GET('/users/me')
+				.then(( me = {} ) => {
+					authenticated({ token: getToken(), user: me });
+					const { gameConnection, roomConnection } = me;
+					if (gameConnection) history.push(`/games/${gameConnection}`);
+					else if (roomConnection) history.push(`/rooms/${roomConnection}`);
+					else history.push('/rooms');
+				})
+				.catch(e => {
+					console.log(e);
+					history.push('/auth');
+				});
+		}
+	}, []);
 
 	return (
 		<Layout>
@@ -32,10 +39,10 @@ export default ({ history }) => {
 					<h1 className={`${styles.welcome} ${styles.first}`}>Welcome</h1>
 					<h1 className={`${styles.welcome} ${styles.second}`}>To</h1>
 					<h1 className={`${styles.welcome} ${styles.third}`}>Avalon</h1>
-					<Input action value={name} placeholder="Who are you...?" onKeyUp={keyUp} onChange={({ target: { value } }) => setName(value)}>
-						<input />
-						<Button onClick={submitName} type="submit">Play</Button>
-					</Input>
+					<br />
+					<br />
+					<br />
+					<Button color="white" onClick={() => history.push('/auth')}>Play</Button>					
 				</>
 			)}
 		</Layout>

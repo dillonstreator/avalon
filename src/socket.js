@@ -6,7 +6,6 @@ class WS {
     constructor() {
         this.socket = null;
         this.clientId = null;
-        this.name = null;
     }
 
     isConnected() { return !!this.socket; }
@@ -15,12 +14,15 @@ class WS {
     getName() { return this.name; }
     getClientId() { return this.clientId; }
 
-    connect({ name }) {
+    connect({ token }) {
         if (this.isConnected()) return;
 
-        this.name = name;
-        this.socket = io(`${WS_URI}?name=${name}`);
+        this.socket = io(`${WS_URI}?token=${token}`);
         this.registerHandlers();
+    }
+    disconnect() {
+        this.socket.disconnect();
+        this.socket = null;
     }
     registerHandlers() {
         socket.addEventListener('handshake completed', data => {
