@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { Loader, Button } from 'semantic-ui-react';
 
 import socket from '../../socket';
-import { GET, DELETE } from '../../api';
+import { GET, DELETE, PUT } from '../../api';
 import { getMe } from '../../utils/auth';
 import { Layout, RoleCard } from '../../components';
 
@@ -24,37 +24,53 @@ export default props => {
 		DELETE(`/games/${id}`);
 	};
 
+	const restartGame = id => {
+		PUT(`/games/${id}/restart`);
+	};
+
 	const gameEndHandler = useCallback(({ _id }) => {
 		if (_id !== gameId) return;
 
 		props.history.push('/rooms');
-	}, [gameId, props.history])
+	}, [gameId, props.history]);
+
+	const load = useCallback(() => {
+		setLoading(true);
+		GET(`/games/${gameId}/me`)
+				.then(role => {
+						setLoading(false);
+						setRole(role);
+				})
+				.catch(console.error); // TODO: What's the catch?!
+
+		GET(`/games/${gameId}`)
+				.then(setGame);
+	}, [gameId]);
+
+	const gameRestartHandler = useCallback(({ _id }) => {
+		if (_id !== gameId) return;
+
+		load();
+	}, [gameId, load]);
 
 	useEffect(() => {
-	    setLoading(true);
-	    GET(`/games/${gameId}/me`)
-	        .then(role => {
-	            setLoading(false);
-	            setRole(role);
-	        })
-					.catch(console.error); // TODO: What's the catch?!
-					
-			GET(`/games/${gameId}`)
-					.then(setGame);
+		load();
 
-			socket.addEventListener('game ended', gameEndHandler);
+		socket.addEventListener('game ended', gameEndHandler);
+		socket.addEventListener('game restarted', gameRestartHandler);
 
-			return () => {
-				socket.removeEventListener('game ended', gameEndHandler);
-			}
-	}, [gameId, gameEndHandler]);
+		return () => {
+			socket.removeEventListener('game ended', gameEndHandler);
+		}
+	}, [gameId, gameEndHandler, load, gameRestartHandler]);
 
 
-	const isHost = getMe()._id === _get(game, ['host', '_id']);
+	const isHost = _get(getMe(), ['_id']) === _get(game, ['host', '_id']);
 
 	return (
 		<Layout className={styles.gameContainer}>
 			{loading ? <Loader active /> : <RoleCard {...role} />}
+			{!loading && isHost && <Button onClick={() => restartGame(gameId)} color="green" style={{ marginTop: '50px' }}>Restart Game</Button>}
 			{!loading && isHost && <Button onClick={() => endGame(gameId)} color="red" style={{ marginTop: '50px' }}>End Game!</Button>}
 		</Layout>
 	);
