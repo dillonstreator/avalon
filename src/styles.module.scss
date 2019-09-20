@@ -1,5 +1,15 @@
 @import "./assets/scss/colors.scss";
 
+@font-face {
+    font-family: Badonk-a-donk;
+    src: url('./assets/fonts/badankadonk.ttf');
+}
+
+@font-face {
+    font-family: Indy Pimp;
+    src: url('./assets/fonts/indiepimptbs.ttf');
+}
+
 .App {
     background-color: $primary;
     color: $white;
