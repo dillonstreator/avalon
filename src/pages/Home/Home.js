@@ -44,7 +44,7 @@ export default ({ history }) => {
 					<br />
 					<br />
 					<br />
-					<Button color="white" onClick={() => history.push('/auth')}>Play</Button>					
+					<Button onClick={() => history.push('/auth')}>Play</Button>					
 				</>
 			)}
 		</Layout>
