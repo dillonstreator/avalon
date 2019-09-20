@@ -23,3 +23,4 @@ export const authenticated = ({ token, user }) => {
 
 export const hasRegistered = () => IS_PROD ? !!localStorage.getItem(LS_AVALON_USER) : false;
 export const getToken = () => IS_PROD ? localStorage.getItem(LS_AVALON_TOKEN) : auth[LS_AVALON_TOKEN];
+export const getMe = () => IS_PROD ? JSON.parse(localStorage.getItem(LS_AVALON_USER) || '{}') : auth[LS_AVALON_USER];

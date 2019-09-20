@@ -11,10 +11,7 @@ import { Layout, RoleCard } from '../../components';
 import styles from './styles.module.scss';
 
 export default props => {
-	if (!socket.isConnected()) {
-		alert('you must enter your username before joining or creating a room');
-		return <Redirect to="/" />;
-	}
+	if (!socket.isConnected()) return <Redirect to="/" />;
 
 	const [loading, setLoading] = useState(true);
 	const [role, setRole] = useState({});
@@ -23,7 +20,7 @@ export default props => {
 
 	useEffect(() => {
 	    setLoading(true);
-	    GET(`/games/${gameId}`)
+	    GET(`/games/${gameId}/me`)
 	        .then(role => {
 	            setLoading(false);
 	            setRole(role);

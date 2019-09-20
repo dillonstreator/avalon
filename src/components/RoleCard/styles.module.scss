@@ -1,16 +1,10 @@
 @import "../../assets/scss/colors.scss";
 
 .roleCard {
+    height: 100%;
+    width: 100%;
     padding: 25px 10px;
-    border-radius: 5px;
     
-    &.evil {
-        background-color: $red;
-    }
-    &.good {
-        background-color: $blue;
-    }
-
     & > .role {
         text-transform: uppercase;
         font-weight: bold;

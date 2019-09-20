@@ -4,7 +4,8 @@ import { Layout } from '../../components';
 import { Redirect } from 'react-router-dom';
 import socket from '../../socket';
 import _get from 'lodash/get';
-import { GET, PUT } from '../../api';
+import { GET, PUT, POST } from '../../api';
+import { getMe } from '../../utils/auth';
 import { List, Loader, Container, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
 
@@ -21,12 +22,12 @@ export default props => {
 	const roomId = _get(props, 'match.params.roomId');
 
 	const startGame = theRoomId => {
-		PUT(`/games`, { body: { roomId: theRoomId } })	
+		POST(`/games`, { body: { roomId: theRoomId } })	
 			.catch(console.error); // TODO: what's the catch?!
 	};
 
 	const gameStartHandler = useCallback(
-		({ gameId }) => props.history.push(`/games/${gameId}`),
+		({ _id }) => props.history.push(`/games/${_id}`),
 		[props.history]
 	);
 	useEffect(() => {
@@ -54,8 +55,9 @@ export default props => {
 		};
 	}, [roomId, gameStartHandler]);
 
-	const { name, hostId, users } = room;
-	const isHost = socket.getClientId() === hostId;
+	const { name, users, host } = room;
+	const { _id: hostId } = host || {};
+	const isHost = getMe()._id === hostId;
 	const canStartGame = isHost && users.length >= MIN_POSSIBLE_USERS;
 
 	return (
