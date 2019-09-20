@@ -27,7 +27,7 @@ export default props => {
 	};
 
 	const gameStartHandler = useCallback(
-		({ gameId }) => props.history.push(`/games/${gameId}`),
+		({ _id }) => props.history.push(`/games/${_id}`),
 		[props.history]
 	);
 	useEffect(() => {
