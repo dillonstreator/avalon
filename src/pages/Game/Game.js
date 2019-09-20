@@ -6,7 +6,7 @@ import { Loader, Button } from 'semantic-ui-react';
 
 import socket from '../../socket';
 import { GET, DELETE } from '../../api';
-import { getUser } from '../../utils/auth';
+import { getMe } from '../../utils/auth';
 import { Layout, RoleCard } from '../../components';
 
 import styles from './styles.module.scss';
@@ -50,7 +50,7 @@ export default props => {
 	}, [gameId, gameEndHandler]);
 
 
-	const isHost = getUser()._id === _get(game, ['host', '_id']);
+	const isHost = getMe()._id === _get(game, ['host', '_id']);
 
 	return (
 		<Layout className={styles.gameContainer}>
