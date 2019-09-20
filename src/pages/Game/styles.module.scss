@@ -1,5 +1,6 @@
 .gameContainer {
     display: flex !important;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
