@@ -45,3 +45,4 @@ const makeRequest = method => {
 export const GET = makeRequest('GET');
 export const POST = makeRequest('POST');
 export const PUT = makeRequest('PUT');
+export const DELETE = makeRequest('DELETE');
