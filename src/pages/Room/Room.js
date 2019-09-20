@@ -31,7 +31,7 @@ export default props => {
 	);
 	useEffect(() => {
 		const updateHandler = newRoom => {
-			if (newRoom.roomId !== roomId) return;
+			if (newRoom._id !== roomId) return;
 			setRoom(newRoom);
 		};
 

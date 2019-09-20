@@ -19,11 +19,11 @@ export default ({ history }) => {
 
 	useEffect(() => {
 		const updateHandler = room => {
-			const newRooms = rooms.filter(r => r.roomId !== room.roomId).concat(room);
+			const newRooms = rooms.filter(r => r._id !== room._id).concat(room);
 			setRooms(newRooms);
 		};
-		const deleteHandler = ({ roomId }) => {
-			const newRooms = rooms.filter(r => r.roomId !== roomId);
+		const deleteHandler = ({ _id }) => {
+			const newRooms = rooms.filter(r => r._id !== _id);
 			setRooms(newRooms);
 		};
 		const createHandler = room => setRooms(rooms.concat(room));
