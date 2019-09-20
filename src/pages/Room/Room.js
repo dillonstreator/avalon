@@ -4,9 +4,10 @@ import { Layout } from '../../components';
 import { Redirect } from 'react-router-dom';
 import socket from '../../socket';
 import _get from 'lodash/get';
-import { GET, PUT } from '../../api';
+import { GET, PUT, POST } from '../../api';
 import { List, Loader, Container, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
+import { getUser } from '../../utils/auth';
 
 import styles from "./styles.module.scss";
 
@@ -21,7 +22,7 @@ export default props => {
 	const roomId = _get(props, 'match.params.roomId');
 
 	const startGame = theRoomId => {
-		PUT(`/games`, { body: { roomId: theRoomId } })	
+		POST(`/games`, { body: { roomId: theRoomId } })	
 			.catch(console.error); // TODO: what's the catch?!
 	};
 
@@ -54,8 +55,8 @@ export default props => {
 		};
 	}, [roomId, gameStartHandler]);
 
-	const { name, hostId, users } = room;
-	const isHost = socket.getClientId() === hostId;
+	const { name, host = {}, users } = room;
+	const isHost = getUser()._id === host._id;
 	const canStartGame = isHost && users.length >= MIN_POSSIBLE_USERS;
 
 	return (
