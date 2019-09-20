@@ -11,7 +11,7 @@ export default ({ history }) => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		if (!hasRegistered()) {
+		if (!hasRegistered() && !getToken()) {
 			setLoading(false);
 		}
 		else {
@@ -28,7 +28,7 @@ export default ({ history }) => {
 					history.push('/auth');
 				});
 		}
-	}, []);
+	}, [history]);
 
 	return (
 		<Layout>

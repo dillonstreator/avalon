@@ -5,7 +5,8 @@ import classnames from 'classnames';
 import styles from './styles.module.scss';
 
 export default ({ team, role, message }) => {
-	const isEvil = team === 'evil';
+	const isEvil = /evil/i.test(team);
+
 	const className = classnames({
 		[styles.evil]: isEvil,
 		[styles.good]: !isEvil,

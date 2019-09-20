@@ -6,6 +6,9 @@ import socket from '../../socket';
 import _get from 'lodash/get';
 import { GET, PUT } from '../../api';
 import { List, Loader, Container, Button } from 'semantic-ui-react';
+import classnames from 'classnames';
+
+import styles from "./styles.module.scss";
 
 const MIN_POSSIBLE_USERS = 5;
 
@@ -18,7 +21,8 @@ export default props => {
 	const roomId = _get(props, 'match.params.roomId');
 
 	const startGame = theRoomId => {
-		PUT(`/rooms/${theRoomId}/start`).catch(console.error); // TODO: what's the catch?!
+		PUT(`/games`, { body: { roomId: theRoomId } })	
+			.catch(console.error); // TODO: what's the catch?!
 	};
 
 	const gameStartHandler = useCallback(
@@ -62,9 +66,13 @@ export default props => {
 				<Container>
 					<h1>Room: {name}</h1>
 					<List>
-						{users.map(({ _id, displayName }) => (
-							<List.Item key={_id}>{displayName}</List.Item>
-						))}
+						{users.map(({ _id, displayName, isConnected }) => {
+							const itemClassnNames = classnames({
+								[styles.listItem]: true,
+								[styles.disconnected]: !isConnected,
+							});
+							return <List.Item className={itemClassnNames} key={_id}>{displayName}</List.Item>;
+						})}
 					</List>
 					{canStartGame && (
 						<Button onClick={() => startGame(roomId)}>Start Game</Button>

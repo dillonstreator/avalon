@@ -157,7 +157,7 @@ const Register = ({ toggle: goToLogin, finish }) => {
 
 const Auth = ({ opened: showRegister, toggle, history }) => {
 	const finish = () => {
-		const redirect = _get(history, 'location.search.redirect', '/rooms');
+		const redirect = _get(history, 'location.search.redirect', '/');
 		history.push(redirect);
 	};
 
