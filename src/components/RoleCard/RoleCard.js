@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { ReactComponent as Merlin } from '../../assets/images/Merlin.svg';
 import { ReactComponent as Percival } from '../../assets/images/Percival.svg';
@@ -9,7 +9,9 @@ import { ReactComponent as Mordred } from '../../assets/images/Mordred.svg';
 import { ReactComponent as VanillaEvil } from '../../assets/images/Vanilla Evil.svg';
 import { ReactComponent as Oberon } from '../../assets/images/Oberon.svg';
 
-import { Card } from 'semantic-ui-react';
+import { FlipCard } from '../../components';
+
+import { Card, Button } from 'semantic-ui-react';
 
 import classnames from 'classnames';
 
@@ -18,11 +20,12 @@ import styles from './styles.module.scss';
 export default ({ team, role, knowledge }) => {
 	if (!role) return 'div';
 
+	const [isFlipped, setIsFlipped] = useState(false);
+	const [flipView, setFlipView] = useState('role');
+
 	const isEvil = /evil/i.test(team);
 
 	const className = classnames({
-		[styles.evil]: isEvil,
-		[styles.good]: !isEvil,
 		[styles.roleCard]: true,
 	});
 
@@ -32,26 +35,42 @@ export default ({ team, role, knowledge }) => {
 		case 'Merlin': {
 			Role = Merlin;
 			Description = () => (
-				<span>You are Merlin, the ultimate good! Keep an eye on <strong>{knowledge['First Evil']}</strong> and <strong>{knowledge['Second Evil']}</strong></span>
+				<span>
+					You are Merlin, the ultimate good! Keep an eye on{' '}
+					<strong>{knowledge['First Evil']}</strong> and{' '}
+					<strong>{knowledge['Second Evil']}</strong>
+				</span>
 			);
 			break;
 		}
 		case 'Percival':
 			Role = Percival;
 			Description = () => (
-				<span>You are Percival! Try to figure out who is who between <strong>{knowledge['First Unknown']}</strong> and <strong>{knowledge['Second Unknown']}</strong></span>
+				<span>
+					You are Percival! Try to figure out who is who between{' '}
+					<strong>{knowledge['First Unknown']}</strong> and{' '}
+					<strong>{knowledge['Second Unknown']}</strong>
+				</span>
 			);
 			break;
 		case 'Assassin':
 			Role = Assassin;
 			Description = () => (
-				<span>Morgana is <strong>{knowledge['Morgana']}</strong><br />Mordred is <strong>{knowledge['Mordred']}</strong></span>
+				<span>
+					Morgana is <strong>{knowledge['Morgana']}</strong>
+					<br />
+					Mordred is <strong>{knowledge['Mordred']}</strong>
+				</span>
 			);
 			break;
 		case 'Morgana':
 			Role = Morgana;
 			Description = () => (
-				<span>Assassin is <strong>{knowledge['Assassin']}</strong><br />Mordred is <strong>{knowledge['Mordred']}</strong></span>
+				<span>
+					Assassin is <strong>{knowledge['Assassin']}</strong>
+					<br />
+					Mordred is <strong>{knowledge['Mordred']}</strong>
+				</span>
 			);
 			break;
 		case 'Vanilla Good':
@@ -63,7 +82,11 @@ export default ({ team, role, knowledge }) => {
 		case 'Mordred':
 			Role = Mordred;
 			Description = () => (
-				<span>Assassin is <strong>{knowledge['Assassin']}</strong><br />Morgana is <strong>{knowledge['Morgana']}</strong></span>
+				<span>
+					Assassin is <strong>{knowledge['Assassin']}</strong>
+					<br />
+					Morgana is <strong>{knowledge['Morgana']}</strong>
+				</span>
 			);
 			break;
 		case 'Vanilla Evil':
@@ -80,15 +103,55 @@ export default ({ team, role, knowledge }) => {
 			break;
 	}
 
+	const seeRole = () => {
+		setFlipView('role');
+		setIsFlipped(true);
+	};
+	const seeLady = () => {
+		setFlipView('lady');
+		setIsFlipped(true);
+	};
+
 	return (
-		<Card className={className}>
-			<Role />
-			<Card.Content>
-				<Card.Header>{role}</Card.Header>
-				<Card.Description>
-					<Description />
-				</Card.Description>
-			</Card.Content>
-		</Card>
+		<FlipCard disabled flipped={isFlipped}>
+			<Card className={className}>
+				<Card.Content key="option-pane">
+					<Card.Description>
+						<Button onClick={seeRole}>See Role</Button>
+						<br />
+						<br />
+						<Button onClick={seeLady}>See Lady</Button>
+					</Card.Description>
+				</Card.Content>
+			</Card>
+			<Card className={className}>
+				<Button
+					icon="times"
+					className={styles.xButton}
+					onClick={() => setIsFlipped(false)}
+				/>
+				{flipView === 'role' ? (
+					<>
+						<Role />
+						<Card.Content>
+							<Card.Description>
+								<Description />
+							</Card.Description>
+						</Card.Content>
+					</>
+				) : (
+					<Card.Content
+						className={classnames({
+							[styles.evil]: isEvil,
+							[styles.good]: !isEvil,
+						})}
+					>
+						<Card.Description>
+							<h1>{team}</h1>
+						</Card.Description>
+					</Card.Content>
+				)}
+			</Card>
+		</FlipCard>
 	);
 };

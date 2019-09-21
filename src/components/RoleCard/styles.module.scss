@@ -1,12 +1,35 @@
 @import "../../assets/scss/colors.scss";
 
 .roleCard {
-    height: 100%;
+    min-height: 100px !important;
     width: 100%;
     padding: 25px 10px;
     
     & > .role {
         text-transform: uppercase;
         font-weight: bold;
+    }
+}
+
+.xButton {
+    position: absolute;
+    right: 0;
+    padding: 5px !important;
+    margin: 5px !important;
+    width: 25px !important;
+    font-weight: bolder;
+}
+
+.evil {
+    background-color: $red !important;
+    h1 {
+        color: black !important;
+    }
+}
+.good {
+    background-color: $blue !important;
+
+    h1 {
+        color: white !important;
     }
 }
