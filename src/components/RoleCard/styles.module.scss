@@ -1,12 +1,6 @@
 @import "../../assets/scss/colors.scss";
 
 .roleCard {
-    height: 100%;
     width: 100%;
     padding: 25px 10px;
-    
-    & > .role {
-        text-transform: uppercase;
-        font-weight: bold;
-    }
 }

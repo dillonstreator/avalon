@@ -84,7 +84,6 @@ export default ({ team, role, knowledge }) => {
 		<Card className={className}>
 			<Role />
 			<Card.Content>
-				<Card.Header>{role}</Card.Header>
 				<Card.Description>
 					<Description />
 				</Card.Description>

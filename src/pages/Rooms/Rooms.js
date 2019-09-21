@@ -102,7 +102,7 @@ export default ({ history }) => {
 			)}
 			<Input
 				action
-				placeholder="new room name..."
+				placeholder="New room name..."
 				onChange={({ target: { value } }) => setRoomName(value)}
 				onKeyUp={keyUp}
 			>
