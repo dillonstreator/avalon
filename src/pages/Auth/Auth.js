@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
 
 import { POST } from '../../api';
@@ -51,14 +52,15 @@ const Login = ({ toggle: goToLogin, finish }) => {
 				<Form.Input
 					required
 					value={username}
-					placeholder="username..."
+					placeholder="Username..."
+					autoFocus
 					onChange={onChange(setUsername)}
 				/>
 				<Form.Input
 					required
 					type="password"
 					value={password}
-					placeholder="password..."
+					placeholder="Password..."
 					onChange={onChange(setPassword)}
 				/>
 				<Button primary onClick={login}>
@@ -66,7 +68,7 @@ const Login = ({ toggle: goToLogin, finish }) => {
 				</Button>
 			</Form>
 			<br />
-			<a onClick={goToLogin}>not a member yet? register here.</a>
+			<a onClick={goToLogin}>Not a member yet? Register here!</a>
 		</div>
 	);
 };
@@ -118,20 +120,21 @@ const Register = ({ toggle: goToLogin, finish }) => {
 				<Form.Input
 					required
 					value={username}
-					placeholder="username..."
+					placeholder="Username..."
+					autoFocus
 					onChange={onChange(setUsername)}
 				/>
 				<Form.Input
 					required
 					value={displayName}
-					placeholder="display name..."
+					placeholder="Display name..."
 					onChange={onChange(setDisplayName)}
 				/>
 				<Form.Input
 					required
 					type="password"
 					value={password}
-					placeholder="password..."
+					placeholder="Password..."
 					onChange={onChange(setPassword)}
 				/>
 				<Form.Input
@@ -139,7 +142,7 @@ const Register = ({ toggle: goToLogin, finish }) => {
 					required
 					type="password"
 					value={passwordConfirm}
-					placeholder="password confirmation..."
+					placeholder="Password confirmation..."
 					onChange={({ target: { value } }) => {
 						setPasswordsMatch(value === password);
 						setPasswordConfirm(value);
@@ -150,7 +153,7 @@ const Register = ({ toggle: goToLogin, finish }) => {
 				</Button>
 			</Form>
 			<br />
-			<a onClick={goToLogin}>already a member? login here.</a>
+			<a onClick={goToLogin}>Already a member? Login here!</a>
 		</div>
 	);
 };
