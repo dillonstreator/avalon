@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { Loader, Button } from 'semantic-ui-react';
 
 import socket from '../../socket';
-import { GET, DELETE, PUT } from '../../api';
+import { GET, PUT, POST } from '../../api';
 import { getMe } from '../../utils/auth';
 import { Layout, RoleCard } from '../../components';
 
@@ -20,13 +20,8 @@ export default props => {
 
 	const gameId = _get(props, 'match.params.gameId');
 
-	const endGame = id => {
-		DELETE(`/games/${id}`);
-	};
-
-	const restartGame = id => {
-		PUT(`/games/${id}/restart`);
-	};
+	const endGame = id => PUT(`/games/${id}/end`);
+	const restartGame = gameId => POST(`/games/restart`, { body: { gameId }});
 
 	const gameEndHandler = useCallback(({ _id }) => {
 		if (_id !== gameId) return;
@@ -47,11 +42,12 @@ export default props => {
 				.then(setGame);
 	}, [gameId]);
 
-	const gameRestartHandler = useCallback(({ _id }) => {
-		if (_id !== gameId) return;
+	const gameRestartHandler = useCallback(({ fromId, _id }) => {
+		console.log(fromId, _id);
+		if (fromId !== gameId) return;
 
-		load();
-	}, [gameId, load]);
+		props.history.replace(`/games/${_id}`);
+	}, [gameId, props.history]);
 
 	useEffect(() => {
 		load();
