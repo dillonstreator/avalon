@@ -1,6 +1,7 @@
 @import "./assets/scss/colors.scss";
 
 .App {
-    background-color: $primary;
+    background: linear-gradient(to right, rgba($primary, 0.9), rgba($primary, 0.9)), url(./assets/images/bg.jpg);
+    background-size: cover;
     color: $white;
 }

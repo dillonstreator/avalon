@@ -11,14 +11,9 @@ const CSS = `
   -ms-transform-style: preserve-3d;
 
   display: inline-block;
-  margin-left: -44%;
-  margin-bottom: 400px;
-}
-
-@media only screen and (max-width: 600px) {
-  .ReactFlipCard {
-    margin-left: -88%;
-  }
+  width: 290px;
+  height: 350px;
+  margin-bottom: 50px;
 }
 
 /* START: Accommodating for IE */
