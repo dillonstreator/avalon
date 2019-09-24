@@ -1,6 +1,6 @@
 import { getToken } from './utils/auth';
 
-const BASE_URI = process.env['NODE_ENV'] === 'production' ? 'http://avalon-api.honnold.me' : 'http://localhost:8080';
+const BASE_URI = process.env['NODE_ENV'] === 'production' ? 'https://avalon-api.honnold.me' : 'http://localhost:8080';
 
 const makeRequest = method => {
 	/**
