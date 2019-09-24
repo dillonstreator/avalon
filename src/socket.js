@@ -1,5 +1,8 @@
 import io from 'socket.io-client';
 
+import { store } from './App';
+import { actions as roomActions } from './ducks/rooms';
+
 const WS_URI = process.env['NODE_ENV'] === 'production' ? 'http://avalon-api.honnold.me' : 'localhost:8080';
 
 class WS {
@@ -29,12 +32,10 @@ class WS {
             console.log('handshake completed:', data);
             this.clientId = data;
         });
-        socket.addEventListener('room created', data => {
-            console.log('room created', data);
-        });
-        socket.addEventListener('room deleted', data => {
-            console.log('room deleted', data);
-        });
+        socket.addEventListener('room created', room => store.dispatch(roomActions.addRoom(room)));
+        socket.addEventListener('room updated', room => store.dispatch(roomActions.updateRoom(room)));
+        socket.addEventListener('room deleted', room => store.dispatch(roomActions.deleteRoom(room)));
+        socket.addEventListener('user updated', user => store.dispatch(roomActions.updateRoomsUser(user)));
         socket.addEventListener('game started', data => {
             console.log('game started', data);
         });
@@ -53,6 +54,7 @@ class WS {
         this.socket.addEventListener(event, handler);
     }
     removeEventListener(event, handler) {
+        if (!this.socket) return;
         this.socket.removeEventListener(event, handler);
     }
 }

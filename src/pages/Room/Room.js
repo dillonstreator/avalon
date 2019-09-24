@@ -1,62 +1,58 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
-import { Layout } from '../../components';
+import { connect } from 'react-redux';
+import { actions as roomActions } from '../../ducks/rooms';
+
 import { Redirect } from 'react-router-dom';
-import socket from '../../socket';
+import { List, Loader, Container, Button } from 'semantic-ui-react';
 import _get from 'lodash/get';
+import classnames from 'classnames';
+import { Layout } from '../../components';
+import socket from '../../socket';
 import { GET, PUT, POST } from '../../api';
 import { getMe } from '../../utils/auth';
-import { List, Loader, Container, Button } from 'semantic-ui-react';
-import classnames from 'classnames';
 
-import styles from "./styles.module.scss";
+import styles from './styles.module.scss';
 
 const MIN_POSSIBLE_USERS = 5;
 
-export default props => {
-	if (!socket.isConnected()) return <Redirect to="/" />;
-
-	const [room, setRoom] = useState({});
+const Room = ({ match, history, room = {}, addRoom }) => {	
 	const [loading, setLoading] = useState(true);
 
-	const roomId = _get(props, 'match.params.roomId');
+	const roomId = _get(match, 'params.roomId');
 
 	const startGame = theRoomId => {
-		POST(`/games`, { body: { roomId: theRoomId } })	
-			.catch(console.error); // TODO: what's the catch?!
+		POST(`/games`, { body: { roomId: theRoomId } }).catch(console.error); // TODO: what's the catch?!
 	};
 
 	const gameStartHandler = useCallback(
-		({ _id }) => props.history.push(`/games/${_id}`),
-		[props.history]
+		({ _id }) => history.push(`/games/${_id}`),
+		[history]
 	);
-	useEffect(() => {
-		const updateHandler = newRoom => {
-			if (newRoom._id !== roomId) return;
-			setRoom(newRoom);
-		};
 
+	useEffect(() => {
 		setLoading(true);
 		GET(`/rooms/${roomId}`)
 			.then(r => {
-				setRoom(r);
-				setLoading(false);
-				socket.addEventListener('room updated', updateHandler);
+				addRoom(r);
 				socket.addEventListener('game started', gameStartHandler);
 			})
-			.catch(console.error); // TODO: what's the catch?!
+			.catch(console.error)
+			.finally(() => setLoading(false)); // TODO: what's the catch?!
 
+			
 		return () => {
-			socket.removeEventListener('room updated', updateHandler);
 			socket.removeEventListener('game started', gameStartHandler);
 			PUT(`/users/leave-room`)
 				.then(() => {})
 				.catch(console.error); // TODO: what's the catch?!
 		};
-	}, [roomId, gameStartHandler]);
+	}, [roomId, gameStartHandler, addRoom]);
 
-	const { name, users, host } = room;
-	const { _id: hostId } = host || {};
+	if (!socket.isConnected()) return <Redirect to="/" />;
+	
+	const { name, users, host = {} } = room;
+	const { _id: hostId } = host;
 	const isHost = getMe()._id === hostId;
 	const canStartGame = isHost && users.length >= MIN_POSSIBLE_USERS;
 
@@ -73,7 +69,11 @@ export default props => {
 								[styles.listItem]: true,
 								[styles.disconnected]: !isConnected,
 							});
-							return <List.Item className={itemClassnNames} key={_id}>{displayName}</List.Item>;
+							return (
+								<List.Item className={itemClassnNames} key={_id}>
+									{displayName}
+								</List.Item>
+							);
 						})}
 					</List>
 					{canStartGame && (
@@ -84,3 +84,12 @@ export default props => {
 		</Layout>
 	);
 };
+
+const mapStateToProps = ({ rooms }, props) => ({
+	room: rooms[_get(props, 'match.params.roomId')],
+});
+const mapDispatchToProps = dispatch => ({
+	addRoom: room => dispatch(roomActions.addRoom(room)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Room);

@@ -19,11 +19,10 @@ export default ({ history }) => {
 				.then(( me = {} ) => {
 					authenticated({ token: getToken(), user: me });
 					const { gameConnection, roomConnection } = me;
-					history.push('/rooms');
-					
 
 					if (gameConnection) history.push(`/games/${gameConnection}`);
 					else if (roomConnection) history.push(`/rooms/${roomConnection}`);
+					else history.push('/rooms');
 				})
 				.catch(e => {
 					console.log(e);
