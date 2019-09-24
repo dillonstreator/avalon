@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { store } from './App';
 import { actions as roomActions } from './ducks/rooms';
 
-const WS_URI = process.env['NODE_ENV'] === 'production' ? 'http://avalon-api.honnold.me' : 'localhost:8080';
+const WS_URI = process.env['NODE_ENV'] === 'production' ? 'https://avalon-api.honnold.me' : 'localhost:8080';
 
 class WS {
     constructor() {
