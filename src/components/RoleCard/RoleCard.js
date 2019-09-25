@@ -67,6 +67,7 @@ export default ({ team, role, knowledge }) => {
 			Role = Morgana;
 			Description = () => (
 				<span>
+          You are Morgana! Percival can't tell you apart from Merlin!
 					Assassin is <strong>{knowledge['Assassin']}</strong>
 					<br />
 					Mordred is <strong>{knowledge['Mordred']}</strong>
@@ -83,6 +84,7 @@ export default ({ team, role, knowledge }) => {
 			Role = Mordred;
 			Description = () => (
 				<span>
+          You are Mordered! Not even Merlin knows you are evil!
 					Assassin is <strong>{knowledge['Assassin']}</strong>
 					<br />
 					Morgana is <strong>{knowledge['Morgana']}</strong>
