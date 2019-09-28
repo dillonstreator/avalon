@@ -1,5 +1,5 @@
-const ADD = '@avalon/rooms/ADD';
-const UPDATE = '@avalon/rooms/UPDATE';
+const ADD = '@avalon/users/ADD';
+const UPDATE = '@avalon/users/UPDATE';
 
 const initialState = {};
 const reducer = (state = initialState, action = {}) => {
@@ -14,6 +14,6 @@ const reducer = (state = initialState, action = {}) => {
 export default reducer;
 
 export const actions = {
-    addRooms: payload => ({ type: ADD, payload }),
-    updateRoom: payload => ({ type: UPDATE, payload }),
+    addUsers: payload => ({ type: ADD, payload }),
+    updateUser: payload => ({ type: UPDATE, payload }),
 };

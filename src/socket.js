@@ -2,6 +2,8 @@ import io from 'socket.io-client';
 
 import { store } from './App';
 import { actions as roomActions } from './ducks/rooms';
+import { actions as userActions } from './ducks/users';
+import { actions as gameActions } from './ducks/games';
 
 const WS_URI = process.env['NODE_ENV'] === 'production' ? 'https://avalon-api.honnold.me' : 'localhost:8080';
 
@@ -32,14 +34,16 @@ class WS {
             console.log('handshake completed:', data);
             this.clientId = data;
         });
-        socket.addEventListener('room created', room => store.dispatch(roomActions.addRoom(room)));
-        socket.addEventListener('room updated', room => store.dispatch(roomActions.updateRoom(room)));
-        socket.addEventListener('room deleted', room => store.dispatch(roomActions.deleteRoom(room)));
-        socket.addEventListener('user updated', user => store.dispatch(roomActions.updateRoomsUser(user)));
-        socket.addEventListener('game started', data => {
-            console.log('game started', data);
-        });
+        this._dispatchOnEvent('room created', roomActions.addRooms);
+        this._dispatchOnEvent('room updated', roomActions.updateRoom);
+        this._dispatchOnEvent('room deleted', roomActions.deleteRoom);
+        this._dispatchOnEvent('user updated', userActions.updateUser);
+        this._dispatchOnEvent('game started', gameActions.addGames);
     };
+
+    _dispatchOnEvent(event, action) {
+        socket.addEventListener(event, data => store.dispatch(action(data)));
+    }
 
     on(event, handler) {
         const validInputTypes = typeof event === 'string' && typeof handler === 'function';

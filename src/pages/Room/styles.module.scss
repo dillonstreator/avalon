@@ -1,6 +1,17 @@
+@import '../../assets/scss/colors.scss';
+
 .listItem {
 
     &.disconnected {
         color: #666;
+    }
+
+    &.host {
+        &::before {
+            content: "♔";
+            position: relative;
+            left: -5px;
+            color: $gold;
+        }
     }
 }

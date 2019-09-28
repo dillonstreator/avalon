@@ -1,5 +1,4 @@
-const ADD = '@avalon/rooms/ADD';
-const UPDATE = '@avalon/rooms/UPDATE';
+const ADD = '@avalon/games/ADD';
 
 const initialState = {};
 const reducer = (state = initialState, action = {}) => {
@@ -7,13 +6,11 @@ const reducer = (state = initialState, action = {}) => {
 
     switch (type) {
         case ADD: return { ...state, ...payload };
-        case UPDATE: return { ...state, [payload._id]: { ...payload } };
         default: return state;
     }
 }
 export default reducer;
 
 export const actions = {
-    addRooms: payload => ({ type: ADD, payload }),
-    updateRoom: payload => ({ type: UPDATE, payload }),
+    addGames: payload => ({ type: ADD, payload }),
 };
