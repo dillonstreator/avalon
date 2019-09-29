@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import { findDOMNode } from 'react-dom';
 import cx from 'classnames';
 import contains from './helpers/contains';
-import injectStyle from './helpers/injectStyle';
 
-// Auto inject the styles (will only be done once)
-injectStyle();
+import styles from "./styles.module.scss"
 
 class FlipCard extends React.Component {
 	constructor(props) {
@@ -14,6 +12,7 @@ class FlipCard extends React.Component {
 		this.state = {
 			hasFocus: false,
 			isFlipped: this.props.flipped,
+			isMounted: false,
 		};
 
 		this.handleFocus = this.handleFocus.bind(this);
@@ -24,7 +23,12 @@ class FlipCard extends React.Component {
 	}
 
 	componentDidMount() {
+		this.setState({ isMounted: true });
 		this._hideFlippedSide();
+	}
+
+	componentWillUnmount() {
+		this.setState({ isMounted: false });
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -83,7 +87,7 @@ class FlipCard extends React.Component {
 	}
 
 	handleFocus() {
-		if (this.props.disabled) return;
+		if (this.props.disabled || !this.state.isMounted) return;
 
 		this.setState({
 			isFlipped: true,
@@ -91,7 +95,7 @@ class FlipCard extends React.Component {
 	}
 
 	handleBlur() {
-		if (this.props.disabled) return;
+		if (this.props.disabled || !this.state.isMounted) return;
 
 		this.setState({
 			isFlipped: false,
@@ -108,20 +112,18 @@ class FlipCard extends React.Component {
 		return (
 			<div
 				className={cx({
-					ReactFlipCard: true,
-					'ReactFlipCard--vertical': this.props.type === 'vertical',
-					'ReactFlipCard--horizontal': this.props.type !== 'vertical',
-					'ReactFlipCard--flipped': this.state.isFlipped,
-					'ReactFlipCard--enabled': !this.props.disabled,
+					[styles.flipContainer]: true,
+					[styles.vertical]: this.props.type === 'vertical',
+					[styles.hover]: this.state.isFlipped,
 				})}
 				tabIndex={0}
 				onFocus={this.handleFocus}
 				onBlur={this.handleBlur}
 				onKeyDown={this.handleKeyDown}
 			>
-				<div className="ReactFlipCard__Flipper">
+				<div className={styles.flipper}>
 					<div
-						className="ReactFlipCard__Front"
+						className={styles.front}
 						ref="front"
 						tabIndex={-1}
 						aria-hidden={this.state.isFlipped}
@@ -129,7 +131,7 @@ class FlipCard extends React.Component {
 						{this.props.children[0]}
 					</div>
 					<div
-						className="ReactFlipCard__Back"
+						className={styles.back}
 						ref="back"
 						tabIndex={-1}
 						aria-hidden={!this.state.isFlipped}
@@ -142,17 +144,17 @@ class FlipCard extends React.Component {
 	}
 
 	_showBothSides() {
-		this.refs.front.style.display = '';
-		this.refs.back.style.display = '';
+		this.refs.front && (this.refs.front.style.display = '');
+		this.refs.back && (this.refs.back.style.display = '');
 	}
 
 	_hideFlippedSide() {
 		// This prevents the flipped side from being tabbable
 		if (this.props.disabled) {
 			if (this.state.isFlipped) {
-				this.refs.front.style.display = 'none';
+				this.refs.front && (this.refs.front.style.display = 'none');
 			} else {
-				this.refs.back.style.display = 'none';
+				this.refs.back && (this.refs.back.style.display = 'none');
 			}
 		}
 	}

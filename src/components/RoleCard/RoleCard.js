@@ -67,8 +67,8 @@ export default ({ team, role, knowledge }) => {
 			Role = Morgana;
 			Description = () => (
 				<span>
-          You are Morgana! Percival can't tell you apart from Merlin!
-					Assassin is <strong>{knowledge['Assassin']}</strong>
+					You are Morgana! Percival can't tell you apart from Merlin! Assassin
+					is <strong>{knowledge['Assassin']}</strong>
 					<br />
 					Mordred is <strong>{knowledge['Mordred']}</strong>
 				</span>
@@ -84,8 +84,8 @@ export default ({ team, role, knowledge }) => {
 			Role = Mordred;
 			Description = () => (
 				<span>
-          You are Mordered! Not even Merlin knows you are evil!
-					Assassin is <strong>{knowledge['Assassin']}</strong>
+					You are Mordered! Not even Merlin knows you are evil! Assassin is{' '}
+					<strong>{knowledge['Assassin']}</strong>
 					<br />
 					Morgana is <strong>{knowledge['Morgana']}</strong>
 				</span>
@@ -105,12 +105,8 @@ export default ({ team, role, knowledge }) => {
 			break;
 	}
 
-	const seeRole = () => {
-		setFlipView('role');
-		setIsFlipped(true);
-	};
-	const seeLady = () => {
-		setFlipView('lady');
+	const changeView = (view) => {
+		setFlipView(view);
 		setIsFlipped(true);
 	};
 
@@ -119,29 +115,34 @@ export default ({ team, role, knowledge }) => {
 			<Card className={className}>
 				<Card.Content key="option-pane">
 					<Card.Description>
-						<Button onClick={seeRole}>See Role</Button>
+						<Button onClick={() => changeView('role')}>See Role</Button>
 						<br />
 						<br />
-						<Button onClick={seeLady}>See Lady</Button>
+						<Button onClick={() => changeView('lady')}>See Lady</Button>
 					</Card.Description>
 				</Card.Content>
 			</Card>
-			<Card className={className}>
-				<Button
-					icon="times"
-					className={styles.xButton}
-					onClick={() => setIsFlipped(false)}
-				/>
-				{flipView === 'role' ? (
-					<>
-						<Role />
-						<Card.Content>
-							<Card.Description>
-								<Description />
-							</Card.Description>
-						</Card.Content>
-					</>
-				) : (
+			{flipView === 'role' ? (
+				<Card className={className}>
+					<Button
+						icon="times"
+						className={styles.xButton}
+						onClick={() => setIsFlipped(false)}
+					/>
+					<Role />
+					<Card.Content>
+						<Card.Description>
+							<Description />
+						</Card.Description>
+					</Card.Content>
+				</Card>
+			) : (
+				<Card className={className}>
+					<Button
+						icon="times"
+						className={styles.xButton}
+						onClick={() => setIsFlipped(false)}
+					/>
 					<Card.Content
 						className={classnames({
 							[styles.evil]: isEvil,
@@ -152,8 +153,8 @@ export default ({ team, role, knowledge }) => {
 							<h1>{team}</h1>
 						</Card.Description>
 					</Card.Content>
-				)}
-			</Card>
+				</Card>
+			)}
 		</FlipCard>
 	);
 };
