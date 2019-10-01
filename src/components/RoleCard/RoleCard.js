@@ -9,6 +9,9 @@ import { ReactComponent as Mordred } from '../../assets/images/Mordred.svg';
 import { ReactComponent as VanillaEvil } from '../../assets/images/Vanilla Evil.svg';
 import { ReactComponent as Oberon } from '../../assets/images/Oberon.svg';
 
+import { ReactComponent as LadyGood } from '../../assets/images/LadyGood.svg';
+import { ReactComponent as LadyEvil } from '../../assets/images/LadyEvil.svg';
+
 import { FlipCard } from '../../components';
 
 import { Card, Button } from 'semantic-ui-react';
@@ -24,10 +27,6 @@ export default ({ team, role, knowledge }) => {
 	const [flipView, setFlipView] = useState('role');
 
 	const isEvil = /evil/i.test(team);
-
-	const className = classnames({
-		[styles.roleCard]: true,
-	});
 
 	let Role = null;
 	let Description = 'div';
@@ -112,18 +111,16 @@ export default ({ team, role, knowledge }) => {
 
 	return (
 		<FlipCard disabled flipped={isFlipped}>
-			<Card className={className}>
-				<Card.Content key="option-pane">
-					<Card.Description>
-						<Button onClick={() => changeView('role')}>See Role</Button>
-						<br />
-						<br />
-						<Button onClick={() => changeView('lady')}>See Lady</Button>
+			<Card className={styles.roleCard}>
+				<Card.Content className={styles.cardback} key="option-pane">
+					<Card.Description className={styles.actions}>
+						<Button onClick={() => changeView('role')}>Role</Button>
+						<Button onClick={() => changeView('lady')}>Lady</Button>
 					</Card.Description>
 				</Card.Content>
 			</Card>
 			{flipView === 'role' ? (
-				<Card className={className}>
+				<Card className={styles.roleCard}>
 					<Button
 						icon="times"
 						className={styles.xButton}
@@ -137,21 +134,14 @@ export default ({ team, role, knowledge }) => {
 					</Card.Content>
 				</Card>
 			) : (
-				<Card className={className}>
+				<Card className={styles.roleCard}>
 					<Button
 						icon="times"
 						className={styles.xButton}
 						onClick={() => setIsFlipped(false)}
 					/>
-					<Card.Content
-						className={classnames({
-							[styles.evil]: isEvil,
-							[styles.good]: !isEvil,
-						})}
-					>
-						<Card.Description>
-							<h1>{team}</h1>
-						</Card.Description>
+					<Card.Content>
+						{isEvil ? <LadyEvil /> : <LadyGood />}
 					</Card.Content>
 				</Card>
 			)}

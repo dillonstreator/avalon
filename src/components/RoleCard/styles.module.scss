@@ -2,6 +2,7 @@
 
 .roleCard {
     min-height: 100px !important;
+    height: 100%;
     width: 100%;
     padding: 25px 10px;
     
@@ -31,5 +32,22 @@
 
     h1 {
         color: white !important;
+    }
+}
+
+.cardback {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    background-image: url("../../assets/images/Cardback.svg") !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+
+    &>.actions {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 65%;
     }
 }
