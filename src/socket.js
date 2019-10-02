@@ -16,7 +16,6 @@ class WS {
     isConnected() { return !!this.socket; }
     
     getSocket() { return this.socket; }
-    getName() { return this.name; }
     getClientId() { return this.clientId; }
 
     connect({ token }) {

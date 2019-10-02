@@ -34,7 +34,11 @@ const makeRequest = method => {
 					return res;
 				}
 			})
-			.then(res => res.json())
+			.then(res => {
+				if (res.status === 204) return;
+
+				return res.json();
+			})
             .catch(e => {
                 throw e;
             });

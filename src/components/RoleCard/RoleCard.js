@@ -16,8 +16,6 @@ import { FlipCard } from '../../components';
 
 import { Card, Button } from 'semantic-ui-react';
 
-import classnames from 'classnames';
-
 import styles from './styles.module.scss';
 
 export default ({ team, role, knowledge }) => {
